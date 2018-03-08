@@ -12,7 +12,6 @@ import * as _ from 'lodash';
 
 const protect = require('@risingstack/protect');
 
-
 import Knex = require('knex');
 import { MySqlConnectionConfig } from 'knex';
 import { Jwt } from './models/jwt';
