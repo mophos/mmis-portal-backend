@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "nodemon app/bin/www.js"
+    "start": "npx nodemon",
+    "start:dist": "node app/bin/www.js",
+    "build:watch": "npx tsc -w",
+    "build": "npx tsc"
   },
   "dependencies": {
     "@risingstack/protect": "^1.1.0",
@@ -40,6 +43,8 @@
     "@types/node": "^9.4.6",
     "@types/random-js": "^1.0.28",
     "@types/serve-favicon": "^2.2.27",
+    "nodemon": "^1.17.2",
+    "ts-node": "^6.0.2",
     "typescript": "^2.7.2"
   }
 }
