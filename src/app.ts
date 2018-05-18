@@ -149,6 +149,7 @@ app.use('/purchasing', purchasingRoute);
 app.use('/inventory', inventoryRoute);
 app.use('/material', materialRoute);
 app.use('/contracts', contractsRoute);
+app.use('/login', loginRoute);
 
 //catch 404 and forward to error handler
 app.use((req, res, next) => {

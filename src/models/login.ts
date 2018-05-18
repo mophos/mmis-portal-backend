@@ -11,4 +11,10 @@ export class LoginModel {
       })
       .limit(1);
   }
+
+  getHospitalInfo(knex: Knex) {
+    return knex('sys_settings')
+      .select('value')
+      .where({ 'action_name': 'SYS_HOSPITAL' });
+  }
 }
