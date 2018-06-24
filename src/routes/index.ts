@@ -12,7 +12,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/version', (req, res, next) => {
-  res.send({ ok: true, version: 'V1.2.0', build: '20180617' });
+  res.send({ ok: true, version: 'V1.3.0', build: '20180624' });
 });
 
 // export default router;
