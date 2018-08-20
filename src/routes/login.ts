@@ -39,6 +39,22 @@ router.post('/', wrap(async (req, res, next) => {
   } else {
     res.send({ ok: false, error: 'กรุณาระบุชื่อผู้ใช้งานและรหัสผ่าน' })
   }
-}))
+}));
+
+router.get('/hospital', wrap(async (req, res, next) => {
+
+  let db = req.db;
+
+  try {
+    let rs: any = await loginModel.getHospitalInfo(db);
+    let json = JSON.parse(rs[0].value)
+    res.send({ ok: true, hospitalName: json.hospname });
+  } catch (error) {
+    throw error;
+  } finally {
+    db.destroy();
+  }
+
+}));
 
 export default router;

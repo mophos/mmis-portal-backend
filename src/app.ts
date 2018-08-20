@@ -1,8 +1,8 @@
-'use strict';
-require('dotenv').config();
+import * as path from 'path';
+let envPath = path.join(__dirname, '../../mmis-config');
+require('dotenv').config(({ path: envPath }));
 
 import * as express from 'express';
-import * as path from 'path';
 import * as favicon from 'serve-favicon';
 import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 
 const protect = require('@risingstack/protect');
 
-import Knex = require('knex');
+import * as Knex from 'knex';
 import { MySqlConnectionConfig } from 'knex';
 import { Jwt } from './models/jwt';
 const jwt = new Jwt();
@@ -149,6 +149,7 @@ app.use('/purchasing', purchasingRoute);
 app.use('/inventory', inventoryRoute);
 app.use('/material', materialRoute);
 app.use('/contracts', contractsRoute);
+app.use('/login', loginRoute);
 
 //catch 404 and forward to error handler
 app.use((req, res, next) => {
