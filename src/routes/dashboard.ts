@@ -15,9 +15,15 @@ router.get('/', (req, res, next) => {
 
 router.get('/showPurchase', wrap(async (req, res, next) => {
   const db = req.db;
-  // const srType = 'PO';
+  let month = moment(new Date()).get('month') + 1;
+  let year = moment(new Date()).get('year')
+
+  if (month > 9) {
+    year = year + 1;
+  }
+
   try {
-    let rs = await dashboardModel.showPurchase(db);
+    let rs = await dashboardModel.showPurchase(db, year);
     res.send({
       ok: true, rows: rs[0]
     });

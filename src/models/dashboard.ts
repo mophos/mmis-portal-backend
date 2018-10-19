@@ -3,14 +3,16 @@ import * as moment from 'moment';
 
 export class DashboardModel {
 
-	showPurchase(knex: Knex) {
+	showPurchase(knex: Knex, budget_year: any) {
 		return knex.raw(`
     SELECT 
 		p.purchase_order_status as purchase_order_status,
 		round(sum(p.total_price),2) as total_price,
     COUNT(p.purchase_order_status) as count_status 
     FROM
-    pc_purchasing_order p
+		pc_purchasing_order as p
+	WHERE
+		p.budget_year = '${budget_year}'
     GROUP BY 
     purchase_order_status
     `)
