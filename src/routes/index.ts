@@ -8,11 +8,11 @@ import * as wrap from 'co-express';
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-  res.send({ ok: true, message: 'Welcome to Inventory API server' });
+  res.send({ ok: true, message: 'Welcome to Portal API server' });
 });
 
 router.get('/version', (req, res, next) => {
-  res.send({ ok: true, version: 'V.1.0.0', build: '20180407' });
+  res.send({ ok: true, version: 'V3.0.1', build: '20181022' });
 });
 
 // export default router;

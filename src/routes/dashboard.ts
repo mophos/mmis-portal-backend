@@ -15,9 +15,15 @@ router.get('/', (req, res, next) => {
 
 router.get('/showPurchase', wrap(async (req, res, next) => {
   const db = req.db;
-  // const srType = 'PO';
+  let month = moment(new Date()).get('month') + 1;
+  let year = moment(new Date()).get('year')
+
+  if (month > 9) {
+    year = year + 1;
+  }
+
   try {
-    let rs = await dashboardModel.showPurchase(db);
+    let rs = await dashboardModel.showPurchase(db, year);
     res.send({
       ok: true, rows: rs[0]
     });
@@ -135,5 +141,175 @@ router.get('/test-stockcard', wrap(async (req, res, next) => {
   //   }
 
 }));//ตรวจสอบแล้ว 08/10/60
+
+router.get('/orderPoint/:warehouseId', wrap(async (req, res, next) => {
+  const db = req.db;
+  let warehouseId = req.params.warehouseId;
+  let types = await dashboardModel.getGenericTypes(db)
+  types = types[0]
+  let _rs: any;
+  let rs = [];
+  try {
+    for (let i = 0; i < types.length; i++) {
+      _rs = await dashboardModel.orderPoint(db, types[i].generic_type_id, warehouseId);
+      _rs = _rs[0]
+      rs.push(_rs)
+    }
+    res.send({
+      ok: true, rows: rs
+    });
+  }
+  catch (error) {
+    res.send({
+      ok: false, error: error.message
+    })
+  }
+  finally {
+    db.destroy()
+  }
+}));
+
+router.get('/budget/list/:budgetYear', async (req, res, next) => {
+
+  let budgetYear = req.params.budgetYear;
+  let db = req.db;
+  try {
+    let rs: any = await dashboardModel.getBudgetByYear(db, budgetYear);
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    console.log(error)
+    res.send({ ok: false, error: error.messgae });
+  } finally {
+    db.destroy();
+  }
+});
+
+router.get('/budget/transaction/:budgetchart/:sDate/:eDate/:budgetYear/:budgetDetailId?', async (req, res, next) => {
+  let db = req.db;
+  let budgetYear = req.params.budgetYear;
+  let budgetDetailId = req.params.budgetDetailId;
+  let sDate = req.params.sDate;
+  let eDate = req.params.eDate;
+  let budgetchart = req.params.budgetchart;
+  let rs: any
+  try {
+    if (budgetchart == 1) {
+      rs = await dashboardModel.getBudgetTransactionDay(db, budgetYear, budgetDetailId, sDate, eDate);
+    } else if (budgetchart == 2) {
+      rs = await dashboardModel.getBudgetTransactionMonth(db, budgetYear, budgetDetailId, sDate, eDate);
+    }
+    rs = rs[0]
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    res.send({ ok: false, error: error.message });
+  } finally {
+    db.destroy();
+  }
+});
+
+router.get('/budget/all/:budgetDetailId/:selectedYear', async (req, res, next) => {
+  let db = req.db;
+  let budgetDetailId = req.params.budgetDetailId;
+  let selectedYear = req.params.selectedYear;
+  try {
+    let rs: any = await dashboardModel.getBudget(db, budgetDetailId, selectedYear);
+    rs = rs[0]
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    res.send({ ok: false, error: error.message });
+  } finally {
+    db.destroy();
+  }
+});
+
+router.get('/budget/amount/:budgetDetailId', async (req, res, next) => {
+  let db = req.db;
+  let budgetDetailId = req.params.budgetDetailId;
+  try {
+    let rs: any = await dashboardModel.getBudgetAmount(db, budgetDetailId);
+    rs = rs[0]
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    res.send({ ok: false, error: error.message });
+  } finally {
+    db.destroy();
+  }
+});
+
+router.get('/inventoryValue/:warehouseId/:date', async (req, res, next) => {
+  let db = req.db;
+  let warehouseId = req.params.warehouseId;
+  let types = await dashboardModel.getGenericTypes(db)
+  let date = req.params.date;
+  let rs: any = []
+  let _rs: any = []
+  types = types[0]
+  try {
+    for (let i = 0; i < types.length; i++) {
+      _rs = await dashboardModel.getInventoryValue(db, types[i].generic_type_id, warehouseId, date);
+      rs.push(_rs[0])
+    }
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    res.send({ ok: false, error: error.message });
+  } finally {
+    db.destroy();
+  }
+});
+
+router.get('/poApproved', async (req, res, next) => {
+  let db = req.db;
+  try {
+    let rs: any = await dashboardModel.poApproved(db);
+    rs = rs[0]
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    res.send({ ok: false, error: error.message });
+  } finally {
+    db.destroy();
+  }
+});
+
+router.get('/getOrdersWaiting/:warehouseId', async (req, res, next) => {
+  let db = req.db;
+  let warehouseId = req.params.warehouseId;
+  try {
+    let rs: any = await dashboardModel.getOrdersWaiting(db, warehouseId);
+    rs = rs[0]
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    res.send({ ok: false, error: error.message });
+  } finally {
+    db.destroy();
+  }
+});
+
+router.get('/getOrdersWaitingApprove/:warehouseId', async (req, res, next) => {
+  let db = req.db;
+  let warehouseId = req.params.warehouseId;
+  try {
+    let rs: any = await dashboardModel.getOrdersWaitingApprove(db, warehouseId);
+    rs = rs[0]
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    res.send({ ok: false, error: error.message });
+  } finally {
+    db.destroy();
+  }
+});
+
+router.get('/getOrdersUnpaid/:warehouseId', async (req, res, next) => {
+  let db = req.db;
+  let warehouseId = req.params.warehouseId;
+  try {
+    let rs: any = await dashboardModel.getOrdersUnpaid(db, warehouseId);
+    rs = rs[0]
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    res.send({ ok: false, error: error.message });
+  } finally {
+    db.destroy();
+  }
+});
 
 export default router;
