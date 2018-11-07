@@ -47,10 +47,8 @@ router.get('/hospital', wrap(async (req, res, next) => {
 
   try {
     let rs: any = await loginModel.getHospitalInfo(db);
-    let by: any = await loginModel.getBudgetYear(db);
-    const _by = by[0].value == '' || by[0].value == null ? by[0].default : by[0].value;
     let json = JSON.parse(rs[0].value)
-    res.send({ ok: true, hospitalName: json.hospname, budgetYear: _by });
+    res.send({ ok: true, hospitalName: json.hospname });
   } catch (error) {
     throw error;
   } finally {
