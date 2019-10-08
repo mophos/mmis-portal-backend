@@ -17,13 +17,14 @@ router.get('/showPurchase', wrap(async (req, res, next) => {
   const db = req.db;
   let month = moment(new Date()).get('month') + 1;
   let year = moment(new Date()).get('year')
+  let warehouseId = req.decoded.warehouseId
 
   if (month > 9) {
     year = year + 1;
   }
 
   try {
-    let rs = await dashboardModel.showPurchase(db, year);
+    let rs = await dashboardModel.showPurchase(db, year, warehouseId);
     res.send({
       ok: true, rows: rs[0]
     });
@@ -193,9 +194,9 @@ router.get('/budget/transaction/:budgetchart/:sDate/:eDate/:budgetYear/:budgetDe
   let budgetchart = req.params.budgetchart;
   let rs: any
   try {
-    if (budgetchart == 1) {
+    if (budgetchart == '1') {
       rs = await dashboardModel.getBudgetTransactionDay(db, budgetYear, budgetDetailId, sDate, eDate);
-    } else if (budgetchart == 2) {
+    } else if (budgetchart == '2') {
       rs = await dashboardModel.getBudgetTransactionMonth(db, budgetYear, budgetDetailId, sDate, eDate);
     }
     rs = rs[0]
