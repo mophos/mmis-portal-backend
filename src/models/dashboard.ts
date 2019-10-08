@@ -184,9 +184,10 @@ GROUP BY
 	SELECT
 		pbt.bgdetail_id,
 		sum( pbt.amount ) AS amount,
-		date_time AS date_time
+		po.order_date as date_time
 	FROM
 		pc_budget_transection AS pbt 
+		join pc_purchasing_order as po on pbt.purchase_order_id = po.purchase_order_id
 	WHERE
 		pbt.transaction_status = 'SPEND' `
 
@@ -220,9 +221,10 @@ GROUP BY
 	SELECT
 		pbt.bgdetail_id,
 		sum( pbt.amount ) AS amount,
-		date_time AS date_time
+		po.order_date AS date_time
 	FROM
 		pc_budget_transection AS pbt 
+		join pc_purchasing_order as po on pbt.purchase_order_id = po.purchase_order_id
 	WHERE
 		pbt.transaction_status = 'SPEND' `
 

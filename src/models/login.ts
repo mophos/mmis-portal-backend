@@ -18,9 +18,4 @@ export class LoginModel {
       .where({ 'action_name': 'SYS_HOSPITAL' });
   }
 
-  getBudgetYear(knex: Knex) {
-    return knex('sys_settings')
-      .select('value', 'default')
-      .where({ 'action_name': 'PC_DEFAULT_BUDGET_YEAR' });
-  }
 }
