@@ -3,7 +3,7 @@ import * as moment from 'moment';
 
 export class DashboardModel {
 
-	showPurchase(knex: Knex, budget_year: any) {
+	showPurchase(knex: Knex, budget_year: any, warehouseId: any) {
 		return knex.raw(`
     SELECT 
 		p.purchase_order_status as purchase_order_status,
@@ -13,6 +13,7 @@ export class DashboardModel {
 		pc_purchasing_order as p
 	WHERE
 		p.budget_year = '${budget_year}'
+		AND p.warehouse_id = '${warehouseId}'
     GROUP BY 
     purchase_order_status
     `)
