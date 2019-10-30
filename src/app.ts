@@ -33,7 +33,7 @@ app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
@@ -145,7 +145,7 @@ app.use((req, res, next) => {
 
 app.use('/', indexRoute);
 //temperature
-app.use('/dashboard', dashboardRoute);
+app.use('/dashboard', checkAuth, dashboardRoute);
 app.use('/purchasing', purchasingRoute);
 app.use('/inventory', inventoryRoute);
 app.use('/material', materialRoute);
