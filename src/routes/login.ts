@@ -12,8 +12,8 @@ const jwt = new Jwt();
 const loginModel = new LoginModel();
 
 router.post('/', wrap(async (req, res, next) => {
-  let username = req.body.username;
-  let password = req.body.password;
+  let username: any = req.body.username;
+  let password: any = req.body.password;
 
   if (username && password) {
     let encPassword = crypto.createHash('md5').update(password).digest('hex');

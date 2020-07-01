@@ -50,7 +50,7 @@ app.use(cors());
 // }));
 
 let checkAuth = (req, res, next) => {
-  let token: string = null;
+  let token: any = null;
 
   if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
     token = req.headers.authorization.split(' ')[1];
