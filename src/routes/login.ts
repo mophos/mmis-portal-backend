@@ -1,45 +1,17 @@
 'use strict';
 
 import * as express from 'express';
-import * as crypto from 'crypto';
 import * as wrap from 'co-express';
 
-import { Jwt } from '../models/jwt';
 import { LoginModel } from '../models/login';
 
 const router = express.Router();
-const jwt = new Jwt();
 const loginModel = new LoginModel();
 
-router.post('/', wrap(async (req, res, next) => {
-  let username: any = req.body.username;
-  let password: any = req.body.password;
-
-  if (username && password) {
-    let encPassword = crypto.createHash('md5').update(password).digest('hex');
-    let db = req.db;
-    try {
-      let results = await loginModel.doLogin(db, username, encPassword);
-      if (results.length) {
-        const payload = {
-          fullname: results[0].fullname,
-          id: results[0].id,
-          accessRight: results[0].access_right,
-          warehouseId: results[0].warehouse_id
-        };
-
-        const token = jwt.sign(payload);
-        res.send({ ok: true, token: token })
-      } else {
-        res.send({ ok: false, error: 'ชื่อผู้ใช้งานหรือรหัสผ่าน ไม่ถูกต้อง' })
-      }
-    } catch (error) {
-      res.send({ ok: false, error: error.message });
-    }
-  } else {
-    res.send({ ok: false, error: 'กรุณาระบุชื่อผู้ใช้งานและรหัสผ่าน' })
-  }
-}));
+// หมายเหตุ: POST / (login) ถูกถอดออกแล้ว
+// การเข้าสู่ระบบทั้งหมดต้องผ่าน mmis-management-backend (/api/um/login) ที่เดียว
+// เพื่อให้ผ่านขั้นตอนบังคับเปลี่ยนรหัสผ่านและ 2FA
+// ไฟล์นี้เหลือไว้เฉพาะ GET /hospital ที่หน้า login เรียกใช้แสดงชื่อโรงพยาบาล
 
 router.get('/hospital', wrap(async (req, res, next) => {
 
